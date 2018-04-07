@@ -1,0 +1,59 @@
+package com.techm.ms.component;
+
+import static org.hamcrest.CoreMatchers.is;
+
+import java.net.InetAddress;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.context.embedded.LocalServerPort;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.http.ContentType;
+import io.restassured.specification.RequestSpecification;
+
+@RunWith(SpringRunner.class)
+@ActiveProfiles("test")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class AccountResourceComponentTest {
+	
+	@LocalServerPort
+	protected int randomServerPort;
+	
+	private String uri ="/accounts";
+	
+	private static RequestSpecification spec;
+	
+	@Before
+	public void setUp() throws Exception {
+		RestAssured.baseURI = "http://" + InetAddress.getLocalHost().getHostName() + ":" + randomServerPort + "/api";
+		
+		spec = new RequestSpecBuilder()
+	            .setContentType(ContentType.JSON)
+	            .setBaseUri(RestAssured.baseURI)
+	            .build();
+	}
+	
+	
+	private  RequestSpecification givenBaseSpec() {
+		return RestAssured.given()
+						  .accept(ContentType.JSON)
+						  .contentType(ContentType.JSON);
+	}
+	
+	@Test
+	public void testfindAllAccount_success() {
+		givenBaseSpec()
+		 .spec(spec)
+				.when()
+				.get(uri)
+				.then()
+				.assertThat()
+				.statusCode(is(200));
+	}
+}
