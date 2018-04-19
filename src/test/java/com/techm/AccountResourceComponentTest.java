@@ -33,10 +33,6 @@ public class AccountResourceComponentTest {
 	public void setUp() throws Exception {
 		RestAssured.baseURI = "http://" + InetAddress.getLocalHost().getHostName() + ":" + randomServerPort + "/api";
 		
-		spec = new RequestSpecBuilder()
-	            .setContentType(ContentType.JSON)
-	            .setBaseUri(RestAssured.baseURI)
-	            .build();
 	}
 	
 	
@@ -49,7 +45,6 @@ public class AccountResourceComponentTest {
 	@Test
 	public void testfindAllAccount_success() {
 		givenBaseSpec()
-		 .spec(spec)
 				.when()
 				.get(uri)
 				.then()
